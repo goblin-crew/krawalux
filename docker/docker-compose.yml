@@ -1,0 +1,39 @@
+version: "3.7"
+name: krawalux
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: krawalux-mongodb
+    ports:
+      - "27017:27017"
+    env_file:
+      - mongodb.env
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+
+  redis:
+    image: redis:latest
+    container_name: krawalux-redis
+    ports:
+      - "6379:6379"
+    env_file:
+      - redis.env
+
+  webserver:
+    container_name: krawalux-cockpit
+    build:
+      context: .
+      dockerfile: Cockpit.dockerfile
+      args:
+        - ENV=development
+    ports:
+      - "8088:80"
+    env_file:
+      - mongodb.env
+      - redis.env
+    volumes:
+      - ./cockpit:/var/www/html
+    depends_on:
+      - mongodb
+      - redis
