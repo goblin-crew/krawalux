@@ -30,6 +30,7 @@ package-lock.json
 /tests/*
 /node_modules
 addons/
+!/config/example.config.php
 !.gitignore
 !.gitkeep
 !/storage/*/index.html
